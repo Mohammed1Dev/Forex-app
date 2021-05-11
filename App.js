@@ -11,7 +11,7 @@ import Expo, { Constants } from 'expo';
 import * as Facebook from 'expo-facebook';
 import firebase from 'firebase'
 
-const id = "252870589782343";
+const id = "";
 
 export default class App extends Component {
   state = {
