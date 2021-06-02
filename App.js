@@ -5,110 +5,84 @@ import {
   ScrollView,
   View,
   StyleSheet,
-  Image
+  Image,
+  ImageBackground,
+  Button
 } from 'react-native';
-import Expo, { Constants } from 'expo';
-import * as Facebook from 'expo-facebook';
-import firebase from 'firebase'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import 'react-native-gesture-handler';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import  Home  from "./screens/HomeScreen";
+import LoginScreen  from "./screens/LoginScreen";
+import WebChart from "./screens/WebChart";
 
-const id = "";
+const Stack = createStackNavigator();
 
-export default class App extends Component {
-  state = {
-    responseJSON: null,
-  };
-  callGraph = async token => {
-    /// Look at the fields... I don't have an `about` on my profile but everything else should get returned.
-    const response = await fetch(
-      `https://graph.facebook.com/me?access_token=${token}&fields=id,name,email,about,picture`
-    );
-    const responseJSON = JSON.stringify(await response.json());
-    this.setState({ responseJSON });
-  };
 
-  login = async () => {
 
-    await Facebook.initializeAsync({id});
-    const {type, token} = await Facebook.logInWithReadPermissionsAsync({
-      permissions: ['public_profile', 'email', 'user_friends'] });
 
-    if (type === 'success') {
-      this.callGraph(token);
+const Tab = createBottomTabNavigator();
 
-      this.firebaseLogin(token);
-    }else {
-      alert(type)
-    }
-  };
 
-  // Sign in with credential from the Facebook user.
-  firebaseLogin = token => {
-    firebase.auth().signInWithCredential(token).catch((error) => {
-        // Handle Errors here.
-        console.warn("Add Error for login", error)
-      });
-  };
+function App() {
+  return (
+    // <NavigationContainer>
+    //     {getData && 
+    //       <Tab.Navigator>
+    //       <Tab.Screen name="Home" component={Home} />
+    //       <Tab.Screen name="ChartView" component={WebChart} />
+    //     </Tab.Navigator>
+    //   }
+    // </NavigationContainer>
 
-  renderButton = () => (
-    <TouchableOpacity onPress={() => this.login()}>
-      <View
-        style={{
-          width: '25%',
-          alignSelf: 'center',
-          borderRadius: 4,
-          margin: 10,
-          backgroundColor: '#3B5998',
-        }}>
-        <Image
-          source={{uri: 'https://img.icons8.com/dotty/80/000000/facebook-new.png' }}
-          style={{ width: 40, height: 40 , alignSelf: 'center'}}
-        />
-      </View>
-    </TouchableOpacity>
+
+        <NavigationContainer>
+          
+          <Stack.Navigator initialRouteName="LoginScreen">
+            <Stack.Screen 
+                name="LoginScreen"
+                component={LoginScreen}
+                options={{
+                  title: 'Authetification',
+                  headerStyle: {
+                    backgroundColor: '#ba8b02',
+                  },
+                  
+                  headerTintColor: '#fff',
+                  headerTitleStyle: {
+                    fontWeight: 'bold',
+                  },
+                }} 
+
+            />
+            <Stack.Screen 
+                name="Home" 
+                component={Home}
+                options={{
+                  title: 'My home',
+                  headerStyle: {
+                    backgroundColor: '#ba8b02',
+                  },
+                  headerTintColor: '#fff',
+                  headerTitleStyle: {
+                    fontWeight: 'bold',
+                  },
+                }} 
+            />
+            <Stack.Screen 
+                name="ChartView"
+                component={WebChart}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+   
+            
+ 
   );
-  renderValue = value => (
-    <Text key={value} style={styles.paragraph}>{value}</Text>
-  );
-  render() {
-    return (
-      <ScrollView>
-      
-        <View style={styles.container}>
-        <Text style={styles.paragraph}>Your Welcome To :</Text>
-        <Image
-          source={{uri: 'https://simplonline-v3-prod.s3.eu-west-3.amazonaws.com/media/image/jpg/1677ecdd-0b2a-4e0a-b2d5-51bc60548a34.jpg' }}
-          style={styles.backgroundImage}
-        />
-            {this.state.responseJSON &&
-              this.renderValue('User data : ' + this.state.responseJSON)}
-            <Text style={styles.paragraph}>Log In with :</Text>
-            {this.renderButton()}
-        </View>
-        
-      </ScrollView>
-    );
-  }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    minHeight: 600,
-    flex: 1,
-    justifyContent: 'center',
-    marginTop: 20,
-    backgroundColor: '#ecf0f1'
-  },
-  paragraph: {
-    margin: 24,
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#34495e',
-  },
-  backgroundImage: { 
-    width: '80%', 
-    height: 150 , 
-    alignSelf: 'center',
-    borderRadius: 10
-  }
-});
+export default App;
+
+

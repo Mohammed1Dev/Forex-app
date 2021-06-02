@@ -4,9 +4,9 @@
     "slug": "Forex-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./asset/icon.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./asset/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -23,14 +23,14 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./asset/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.company.app",
       "versionCode": 1
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./asset/favicon.png"
     }
   }
 }
